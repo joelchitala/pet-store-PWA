@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="index.webmanifest">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>PWA</title>
+    <script>
+        if('serviceWorker' in navigator){
+            navigator.serviceWorker.register('service-worker.js')
+        }
+    </script>
+</head>
+<body>
+    <section id="app">
+        <header>
+            <h1 v-text="sitename"></h1>
+            <button v-if="cart.length > 0" v-on:click='showCheckout'>
+                {{cartItemCount}}
+                <i class="fa-solid fa-cart-plus"></i> Checkout
+            </button>
+            <button v-else v-on:click='showCheckout' disabled>
+                {{cartItemCount}}
+                <i class="fa-solid fa-cart-plus"></i> Checkout
+            </button>
+        </header>
+        <main>
+            <section v-if="showItems">
+                <div id="items-container">
+                    <div class="product" v-for="item in items">
+                        <figure>
+                            <img v-bind:src="item.image" alt="">
+                        </figure>
+                        <h2 v-text="item.title"></h2>
+                        <p v-html="item.description"></p>
+                        <!-- The double curly brackets is the shorter version of 'v-text' -->
+                        <p>Price: {{item.price}}</p>
+                        <p>Available Stock: {{item.spaces}}</p>
+                        <!-- This button will be disabled when "canAddToCart" is true -->
+                        <button v-on:click="addToCart(item)" v-if="canAddToCart(item)">Add to Cart</button>
+                        <!-- This button will be disabled otherwise -->
+                        <button disabled="disabled" v-else>Add to Cart</button>
+                        <span v-if="item.spaces === 0"> All out!</span>
+                        <span v-else>Buy Now</span>
+                        <div>
+                            <span v-for="n in item.rating"><i class="fa-solid fa-star"></i></span>
+                            <span v-for="n in 5 - item.rating"><i class="fa-light fa-star"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section v-else>
+                <h2>Checkout</h2>
+                <p>
+                    <strong>First Name</strong>
+                    <input v-model.trim="order.firstname">
+                </p>
+                <p>
+                    <strong>Last Name</strong>
+                    <input v-model.trim="order.lastname">
+                </p>
+                <p>
+                    <strong>Address:</strong>
+                    <input v-model="order.address">
+                </p>
+                <p>
+                    <strong>City:</strong>
+                    <input v-model="order.city">
+                </p>
+                <p>
+                    <strong>State:</strong>
+                    <select name="" v-model="order.state" id="">
+                        <option value="" disabled>State</option>
+                        <option value=""></option>
+                        <!-- <option v-bind:value="states.AL">AL</option>
+                        <option v-bind:value="states.AR">AR</option>
+                        <option v-bind:value="states.CA">CA</option>
+                        <option v-bind:value="states.NV">NV</option> -->
+                    </select>
+                    
+                </p>
+                <p>
+                    <strong>Zip/Postal Code:</strong>
+                    <input v-model.number="order.zip" type="number">
+                </p>
+                <p>
+                    <input type="checkbox" value="true" id="gift" v-model="order.gift" v-bind:true-value="order.sendGift" v-bind:false-value="order.dontSendGift">
+                    <label for="gift">Ship as a Gift?</label>
+                </p>
+                <p>
+                    <input type="radio" value="Home" id="home" v-model="order.method">
+                    <label for="home">Home</label>
+                
+                    <input type="radio" value="Business" id="buisness" v-model="order.method">
+                    <label for="business">Business</label>
+                    
+                </p>
+                <button v-on:click="submitForm">Place Order</button>
+                <h2>Order Information</h2>
+                <p>First Name: {{order.firstname}}</p>
+                <p>Last Name: {{order.lastname}}</p>
+                <p>Address: {{order.address}}</p>
+                <p>City: {{order.city}}</p>
+                <p>Zip: {{order.zip}}</p>
+                <p>State: {{order.state}}</p>
+                <p>Gift: {{order.gift}}</p>
+                <p>Method: {{order.method}}</p>
+            </section>
+        </main>
+    </section>
+</body>
+<script src="data.js"></script>
+<script>
+    const app = new Vue({
+        el:"#app",
+        data:{
+            sitename: 'Vue.JS Pet Depot',
+            showItems: true,
+            items:[...items],
+            order:
+            {
+                firstname: '',
+                lastname: '',
+                address:'',
+                city:'',
+                zip:'',
+                state:'',
+                gift: false,
+                method:'Home',
+                sendGift:'Send as a Gift',
+                dontSendGift:'Do not send as a gift'
+            },
+            states:
+            {
+                AL:'Alabama',
+                AR:'Arizona',
+                CA:'Califonia',
+                NV:'Neveda'
+            },
+            cart: []  // array to store items in shopping cart
+        },
+        methods:{
+            addToCart: function (item) {
+                item.spaces--
+                this.cart.push(item);
+            },
+            showCheckout()
+            {
+                this.showItems = this.showItems ? false : true;
+            },
+            submitForm()
+            {
+                alert('Order Submitted')
+            },
+            canAddToCart: function(item) 
+            {return item.spaces > 0  }  
+        }, 
+        computed:{ 
+            cartItemCount: function () {
+                return this.cart.length || '';
+            },
+             
+        },
+    })
+</script>
+</html>

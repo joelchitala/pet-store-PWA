@@ -1,0 +1,17 @@
+{
+    "name":"Pet Store PWA",
+    "origin":"*",
+    "short_name":"petstore",
+    "methods":"GET,HEAD,PUT,POST,PATCH,DELETE",
+    "description":"My Online Pet Store",
+    "icons":[
+        {
+            "src":"images/icon-store-512.png",
+            "sizes":"512x512",
+            "type":"images/png"
+        }
+    ],
+    "start_url":"index.html",
+    "display":"fullscreen",
+    "background":"#812A34"
+}
