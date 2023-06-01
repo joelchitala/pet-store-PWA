@@ -37,3 +37,11 @@ header{
     margin: 1.25rem;
     text-align: center;
 }
+
+@media (max-width: 480px) {
+    #items-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
