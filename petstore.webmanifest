@@ -12,6 +12,7 @@
         }
     ],
     "start_url":"index.html",
-    "display":"fullscreen"
+    "display":"fullscreen",
+    "background_color":"#812A34"
     
 }
