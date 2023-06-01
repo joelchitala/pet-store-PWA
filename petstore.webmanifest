@@ -2,11 +2,10 @@
     "name": "My Pet Store PWA",
     "origin": "*",
     "short_name": "petstore",
-    "methods":"GET,HEAD,PUT,PATCH,POST,DELETE",
     "description": "my online pet store",
     "icons": [
         {
-            "src": "images/icon-store-512.png",
+            "src": "images\\icon-store-512.png",
             "sizes": "512x512",
             "type": "image/png"
         }
