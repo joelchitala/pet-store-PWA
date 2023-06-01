@@ -1,8 +1,8 @@
 {
     "name":"Pet Store PWA",
-    "origin":"*",
+    
     "short_name":"petstore",
-    "methods":"GET,HEAD,PUT,POST,PATCH,DELETE",
+    
     "description":"My Online Pet Store",
     "icons":[
         {
@@ -12,6 +12,6 @@
         }
     ],
     "start_url":"index.html",
-    "display":"fullscreen",
-    "background":"#812A34"
+    "display":"fullscreen"
+    
 }
