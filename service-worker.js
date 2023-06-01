@@ -20,11 +20,25 @@ self.addEventListener('install',(e) => {
     )
 })
 
+// self.addEventListener('fetch',(e) => {
+//     e.respondWith(
+//         caches.match(e.request).then((r)=>{
+//             console.log(`[Service Worker] Fetching resources: ${e.request.url}`);
+//             return r
+//         })
+//     )
+// })
+
 self.addEventListener('fetch',(e) => {
     e.respondWith(
         caches.match(e.request).then((r)=>{
             console.log(`[Service Worker] Fetching resources: ${e.request.url}`);
-            return r
+            return r || fetch(e.request).then((res)=>{
+                return caches.open(cacheName).then((cache)=>{
+                    cache.put(e.request,res.clone());
+                    return res
+                })
+            })
         })
     )
 })
